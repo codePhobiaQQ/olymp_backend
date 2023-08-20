@@ -23,5 +23,5 @@ function getNewsDTO( $posts ) {
 			$news_data[] = $news_item;
   }
 
-  return $posts;
+  return $news_data;
 }

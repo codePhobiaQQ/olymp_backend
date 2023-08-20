@@ -8,13 +8,17 @@ function getNews( $data ) {
     $orderby = $data->get_param('_orderby');
     $order = $data->get_param('_order');
 
+    
+    // ----------- Validation ----------
     if ( ! in_array( $orderby, array( 'post_date', 'title' ) ) ) {
         $orderby = 'post_date';
     }
-
     if ( ! in_array( $order, array( 'ASC', 'DESC' ) ) ) {
         $order = 'ASC';
     }
+    $page = absint($page); // Фильтрация и преобразование в целое число
+    $limit = absint($limit); // Фильтрация и преобразование в целое число
+    // ----------------------------------
 
     $args = array(
         'post_type' => 'new_news',
@@ -25,8 +29,6 @@ function getNews( $data ) {
     );
 
     $posts = get_posts($args);
-
-    return $posts;
 
     if (empty($posts)) {
         return [];

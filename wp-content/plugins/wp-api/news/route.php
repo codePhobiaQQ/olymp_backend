@@ -10,16 +10,15 @@ function registerNewsEndpoints() {
         array(
             'methods' => 'GET',
             'callback' => 'getNews',
-
             'orderby' => 'post_date',
             'order' => 'DESC',
 
             'args' => array(
                 '_page' => array(
-                    'validate_callback' => 'is_numeric',
+                    'sanitize_callback' => 'absint',
                 ),
                 '_limit' => array(
-                    'validate_callback' => 'is_numeric',
+                    'sanitize_callback' => 'absint',
                 ),
                 '_orderby' => array(
                     'validate_callback' => 'sanitize_text_field',
