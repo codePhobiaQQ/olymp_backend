@@ -1,32 +1,22 @@
-
 # BEGIN WordPress
-# Директивы (строки) между `BEGIN WordPress` и `END WordPress`
-# созданы автоматически и подлежат изменению только через фильтры WordPress.
-# Сделанные вручную изменения между этими маркерами будут перезаписаны.
 <IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-	RewriteBase /olymp/
-	RewriteRule ^index\.php$ - [L]
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule . /olymp/index.php [L]
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /olymp/
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /olymp/index.php [L]
 </IfModule>
-
 # END WordPress
-# BEGIN enable-cors
-# Директивы (строки) между `BEGIN enable-cors` и `END enable-cors`
-# созданы автоматически и подлежат изменению только через фильтры WordPress.
-# Сделанные вручную изменения между этими маркерами будут перезаписаны.
-<IfModule mod_headers.c>
-	<FilesMatch "\.(ttf|ttc|otf|eot|woff|font.css|css|woff2)$">
-		Header set Access-Control-Allow-Origin "*"
-		Header set Access-Control-Allow-Credentials "true"
-	</FilesMatch>
-</IfModule>
 
+# BEGIN enable-cors
 <IfModule mod_headers.c>
-	<FilesMatch "\.(avifs?|bmp|cur|gif|ico|jpe?g|jxl|a?png|svgz?|webp)$">
+	Header set Cache-Control "no-cache, no-store, must-revalidate"
+	Header set Pragma "no-cache"
+	Header set Expires "0"
+
+	<FilesMatch "\.(ttf|ttc|otf|eot|woff|font.css|css|woff2|avifs?|bmp|cur|gif|ico|jpe?g|jxl|a?png|svgz?|webp)$">
 		Header set Access-Control-Allow-Origin "*"
 		Header set Access-Control-Allow-Credentials "true"
 	</FilesMatch>
