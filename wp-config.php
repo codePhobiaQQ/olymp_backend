@@ -29,7 +29,7 @@ define( 'DB_USER', 'root' );
 define( 'DB_PASSWORD', 'root' );
 
 /** Database hostname */
-define( 'DB_HOST', 'localhost' );
+define( 'DB_HOST', 'localhost:8889' );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8mb4' );
@@ -79,13 +79,11 @@ $table_prefix = 'wp_';
  *
  * @link https://wordpress.org/documentation/article/debugging-in-wordpress/
  */
-define( 'WP_DEBUG', true );
-define('WP_CACHE', false);
-define('DISABLE_CACHE', true);
+
 
 /* Add any custom values between this line and the "stop editing" line. */
 
-
+define( 'WP_DEBUG', true );
 
 /* That's all, stop editing! Happy publishing. */
 
