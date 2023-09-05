@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 function getChildCategories($parent_category_id) {
     $child_categories = get_categories(array(
