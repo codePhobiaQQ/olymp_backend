@@ -15,6 +15,7 @@ function getNews( $data ) {
     if ( ! in_array( $order, array( 'ASC', 'DESC' ) ) ) {
         $order = 'ASC';
     }
+
     // ----------------------------------
 
     $args = array(

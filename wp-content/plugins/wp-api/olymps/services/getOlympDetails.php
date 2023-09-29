@@ -12,7 +12,7 @@ function getOlympDetails($request) {
     $result_olymp = null;
 
     foreach ($olymp_list as $olymp) {
-        if (isset($olymp['link']) && $olymp['link'] === $olymp_link) {
+        if (isset($olymp['olymp_link']) && $olymp['olymp_link'] === $olymp_link) {
             $result_olymp = $olymp;
             break;
         }
@@ -22,7 +22,7 @@ function getOlympDetails($request) {
         return new WP_Error('olymp_not_found', 'Olymp not found', array('status' => 404));
     }
 
-    $page_id = $result_olymp['id'];
+    $page_id = $result_olymp['olymp_id'];
 
     return getAcfPageData($page_id);
 }
