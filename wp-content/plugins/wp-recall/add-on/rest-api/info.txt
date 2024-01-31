@@ -1,0 +1,6 @@
+Name: REST API;
+Version: 0.1.0;
+ItemID: 16811;
+Support Core: 16.9.0;
+Description: Реализация REST API через ядро плагина WP-Recall;
+Author: Плечёв Андрей;

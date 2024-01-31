@@ -10,8 +10,10 @@
 
 require_once plugin_dir_path(__FILE__) . 'news/route.php';
 require_once plugin_dir_path(__FILE__) . 'olymps/route.php';
+require_once plugin_dir_path(__FILE__) . 'lk/route.php';
 
 add_action('rest_api_init', function() {
     registerNewsEndpoints();
     regOlympsEndpoints();
+    regLkEndpoints();
 });
