@@ -1,12 +1,12 @@
 <?php
 require_once plugin_dir_path(__FILE__) . '/../dto/getNews.dto.php';
 
-function getNews( $data ) {
-    $page = absint($data->get_param('_page'));
-    $limit = absint($data->get_param('_limit'));
-    $orderby = $data->get_param('_orderby');
-    $order = $data->get_param('_order');
-    $categories = json_decode($data->get_param('categories'), true);
+function getNews($params) {
+    $page = absint($params->get_param('_page'));
+    $limit = absint($params->get_param('_limit'));
+    $orderby = $params->get_param('_orderby');
+    $order = $params->get_param('_order');
+    $categories = json_decode($params->get_param('categories'), true);
     
     // ----------- Validation ----------
     if ( ! in_array( $orderby, array( 'post_date', 'title' ) ) ) {
