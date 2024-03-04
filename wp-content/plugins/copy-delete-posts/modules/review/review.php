@@ -43,6 +43,8 @@
         private $assets_url; // Root URL for review assets
         private $review_url; // Review URL
         private $plugin_menu_url; // Plugin's settings menu
+        public $option_name = '_irb_h_bn_review'; // Option name for this module
+        public $using_since; // Check since user uses this plugin
 
         /**
          * __construct:
@@ -69,7 +71,6 @@
 
           $this->root_url = plugin_dir_url($this->file);
           $this->assets_url = $this->root_url . 'modules/review/assets/';
-          $this->option_name = '_irb_h_bn_review';
           $option_name = $this->option_name;
           $empty = ['users' => []];
           $empty[$individual_slug] = time();
@@ -174,6 +175,12 @@
          * @return bool true if banner can be displayed
          */
         private function can_be_displayed() {
+          
+          global $pagenow;
+          
+          if ($pagenow == 'post.php' || $pagenow == 'profile.php') {
+            return false;
+          }
 
           $uid = get_current_user_id();
           if (!defined('IRB_H_CHECK_LOADED') && function_exists('get_current_user_id') && isset($uid) && intval($uid) > 0) {

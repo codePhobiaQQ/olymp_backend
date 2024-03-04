@@ -12,8 +12,13 @@
 
   // Disallow direct access
   if (!defined('ABSPATH')) exit;
+  
 ?>
-
+<script type="text/javascript" charset="utf-8">
+  var inisev_carousel = { nonce: `<?php echo wp_create_nonce('inisev_carousel'); ?>` };
+</script>
+<script src="<?php echo $this->url . 'assets/index.min.js?v=' . filemtime($this->_root_dir . '/assets/index.min.js'); ?>" type="text/javascript" charset="utf-8" defer></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->url . 'assets/style.min.css?v=' . filemtime($this->_root_dir . '/assets/style.min.css'); ?>">
 <section class="ci-carrinis-wrapper">
   <section class="ci-carrinis" id="carrinis">
     <h1>Like this plugin?</h1>

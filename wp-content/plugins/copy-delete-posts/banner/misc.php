@@ -33,7 +33,18 @@
         private $cdp_slug = 'copy-delete-posts/copy-delete-posts.php';
         private $mpu_slug = 'pop-up-pop-up/pop-up-pop-up.php';
         private $redi_slug = 'redirect-redirection/redirect-redirection.php';
-
+        
+        // Global variables
+        public $_root_file = null;
+        public $_root_dir = null;
+        public $page = null;
+        public $slug = null;
+        public $root = null;
+        public $slug_low = null;
+        public $hooked = null;
+        public $menu = null;
+        public $url = null;
+        
         /*
         * Compile some variables for "future us"
         * Such as slug of current plugin, root dir of plugin
@@ -138,16 +149,16 @@
             define('INISEV_CAROUSEL', true);
 
             // Root URL for assets
-            $this->url = trailingslashit(plugins_url(null, $this->_root_file));
+            $this->url = trailingslashit(plugins_url('', $this->_root_file));
 
             // Load styles
-            wp_enqueue_script('inisev-carousel-script', ($this->url . 'assets/index.min.js'), [], filemtime($this->_root_dir . '/assets/index.min.js'), true);
-            wp_enqueue_style('inisev-carousel-style', ($this->url . 'assets/style.min.css'), [], filemtime($this->_root_dir . '/assets/style.min.css'));
+            // wp_enqueue_script('inisev-carousel-script', ($this->url . 'assets/index.min.js'), [], filemtime($this->_root_dir . '/assets/index.min.js'), true);
+            // wp_enqueue_style('inisev-carousel-style', ($this->url . 'assets/style.min.css'), [], filemtime($this->_root_dir . '/assets/style.min.css'));
 
             // Pass nonce to JS
-            wp_localize_script('inisev-carousel-script', 'inisev_carousel', [
-              'nonce' => wp_create_nonce('inisev_carousel'),
-            ], true);
+            // wp_localize_script('inisev-carousel-script', 'inisev_carousel', [
+            //   'nonce' => wp_create_nonce('inisev_carousel'),
+            // ], true);
 
             // Print the footer
             if (!has_action('ins_global_print_carrousel')) {
@@ -183,7 +194,9 @@
         * Helper function remove _ -/ characters and make lowercase
         */
         private function makelower($str) {
-
+          
+          if (!is_string($str) || empty($str)) $str = '';
+          
           $str = str_replace('_', '', $str);
           $str = str_replace('-', '', $str);
           $str = str_replace('/', '', $str);

@@ -2,8 +2,8 @@
 Contributors: CopyDeletePosts, copydelete
 Tags: Duplicate post, Copy posts, Copy pages, Duplicate posts, Duplicate pages, Clone posts, Clone pages, Delete posts, Delete pages, Duplicator, copy post, copy page
 Requires at least: 4.6
-Tested up to: 6.3
-Stable tag: 1.4.2
+Tested up to: 6.4.3
+Stable tag: 1.4.6
 License: GPLv3
 Requires PHP: 5.6
 
@@ -176,6 +176,42 @@ Vietnamese: [Sao chép bài đăng, sao chép trang, sao chép bài đăng tùy 
 8. Copy from Gutenberg editor
 
 == Changelog ==
+
+= 1.4.6 =
+* [NOTE] Changed plugin's author to our company name
+* [NOTE] Tested up with WordPress v6.4.3 
+* [NOTE] Thank you so much for 300,000+ active installs 💚 (12.02.2024)
+
+= 1.4.5 =
+* [PRO/CHANGE] Default type conversion will be now post not page (custom type -> post type by default)
+* [PRO/FIX] Adjusted category duplication/assign method (useful for cross site duplication)
+* [FIX] Resolved issues with custom type category/tags duplication
+* [FIX] Review banner won't show up on post edit pages now
+* [NEW] Added smart taxonomy handler which can assign custom taxonomy to core fields
+* [NOTE] Upgraded analyst module to latest version
+* [NOTE] Tested with WordPress v6.4.2
+* [NOTE] Tested up to PHP v8.3
+
+= 1.4.4 =
+* [Pro] Improved domain replacement 
+* [Pro] Fixed profiles and other modals center position
+* [Pro] Increased stability of the plugin and improved load time
+* [Pro] Fixed cross-subsite taxonomy duplication (categories, tags, etc.)
+* [Pro] Now our plugin won't create new taxonomy if there is existing one by name
+* [Pro] Improved ACF duplication, tested with latest version
+* [Pro] Resolved known bugs with ACF plugin and added support for domain auto-replacement
+* [Pro] Improved featured image and attachment duplication between subsites
+* Tested up with WordPress 6.4.1
+* Added improvements for PHP 8.2
+* Fixed gutenberg copy button, now it will be displayed properly.
+* Updated "Try it out" module which gives each user individual decition about this module
+* Fixed issues with selecting profile, custom rules during bulk duplication
+* Fixed issues within copy modal with incorrect size of fields
+* Adjusted look of sections to make it more "popping off"
+* Front end duplication visually improved
+
+= 1.4.3 =
+* Forced "Try it out" module to be disabled by default, user can still enable it by manually.
 
 = 1.4.2 =
 * Added additional nonce verification
@@ -417,10 +453,8 @@ Vietnamese: [Sao chép bài đăng, sao chép trang, sao chép bài đăng tùy 
 * Initial release
 
 == Upgrade Notice ==
-= 1.4.1 =
-What's new in 1.4.1?
-* Tested with WP 6.3 RC
-* Added possibility for automatic Elementor Cache clearing after duplication
-* Fixed localization issues, when plugin hanged on previously selected language
-* Updated all shared modules to their latest versions
-* Added additional nonce verification
+= 1.4.6 =
+What's new in 1.4.6?
+* [NOTE] Changed plugin's author to our company name
+* [NOTE] Tested up with WordPress v6.4.3 
+* [NOTE] Thank you so much for 300,000+ active installs 💚 (12.02.2024)
