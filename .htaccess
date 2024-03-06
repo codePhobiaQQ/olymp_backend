@@ -12,14 +12,19 @@ RewriteRule . /index.php [L]
 
 
 # BEGIN enable-cors
+# Директивы (строки) между `BEGIN enable-cors` и `END enable-cors`
+# созданы автоматически и подлежат изменению только через фильтры WordPress.
+# Сделанные вручную изменения между этими маркерами будут перезаписаны.
 <IfModule mod_headers.c>
-	Header set Cache-Control "no-cache, no-store, must-revalidate"
-	Header set Pragma "no-cache"
-	Header set Expires "0"
-
-	<FilesMatch "\.(ttf|ttc|otf|eot|woff|font.css|css|woff2|avifs?|bmp|cur|gif|ico|jpe?g|jxl|a?png|svgz?|webp)$">
-		Header set Access-Control-Allow-Origin "*"
-		Header set Access-Control-Allow-Credentials "true"
-	</FilesMatch>
+<FilesMatch "\.(ttf|ttc|otf|eot|woff|font.css|css|woff2)$">
+SetEnvIf Origin "^http(s)?://(.+\.)?(localhost)$" origin_is=$0
+Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
+Header set Access-Control-Allow-Credentials "true"
+</FilesMatch>
+<FilesMatch "\.(avifs?|bmp|cur|gif|ico|jpe?g|jxl|a?png|svgz?|webp)$">
+SetEnvIf Origin "^http(s)?://(.+\.)?(localhost)$" origin_is=$0
+Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
+Header set Access-Control-Allow-Credentials "true"
+</FilesMatch>
 </IfModule>
 # END enable-cors
