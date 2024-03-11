@@ -3,11 +3,11 @@
 require_once plugin_dir_path(__FILE__) . 'services/login.php';
 require_once plugin_dir_path(__FILE__) . 'services/registration.php';
 
-function lkEndpoints() {
+function authEndpoints() {
     // Login route
     register_rest_route(
         'custom/v2',
-        '/lk/login',
+        '/auth/login',
 
         array(
             'methods' => 'POST',
@@ -27,12 +27,20 @@ function lkEndpoints() {
     // Registration route
     register_rest_route(
         'custom/v2',
-        '/lk/test',
+        '/auth/registration',
 
         array(
             'methods' => 'GET',
             'callback' => 'registration',
             'permission_callback' => '__return_true',
+            'args' => array(
+                'email' => array(
+                    'validate_callback' => 'sanitize_text_field'
+                ),
+                'password' => array(
+                    'validate_callback' => 'sanitize_text_field'
+                ),
+            )
         )
     );
 }
