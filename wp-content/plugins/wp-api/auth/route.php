@@ -30,7 +30,7 @@ function authEndpoints() {
         '/auth/registration',
 
         array(
-            'methods' => 'GET',
+            'methods' => 'POST',
             'callback' => 'registration',
             'permission_callback' => '__return_true',
             'args' => array(
