@@ -67,6 +67,7 @@ define( 'DB_COLLATE', getenv_docker('WORDPRESS_DB_COLLATE', '') );
 
 define('WP_HOME', getenv_docker('WP_HOME', 'http://localhost:9090'));
 define('WP_SITEURL', getenv_docker('WP_SITEURL', 'http://localhost:9090'));
+define( 'WP_ENVIRONMENT_TYPE', 'staging' );
 
 /**#@+
  * Authentication unique keys and salts.

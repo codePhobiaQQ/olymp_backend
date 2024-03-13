@@ -1,7 +1,14 @@
 <?php
 
 function login($params) {
-    $login = absint($params->get_param('login'));
+    $email = absint($params->get_param('email'));
     $password = absint($params->get_param('password'));
-    return [$login, $password];
+
+    $roles = get_editable_roles();
+//    echo $roles;
+//    foreach ( $roles as $role_id => $role_info ) {
+//        echo 'Role: ' . $role_info['name'] . '<br>';
+//    }
+
+    return [$email, $password];
 }

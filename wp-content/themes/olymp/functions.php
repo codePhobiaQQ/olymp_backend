@@ -176,3 +176,24 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
+/** -----------------------------
+ * -------- USER SETTINGS -------
+ * ------------------------------
+*/
+
+add_filter( 'manage_users_columns', 'true_user_is_approved_column' );
+
+function true_user_is_approved_column( $my_columns ) {
+    $my_columns[ 'is_email_approved' ] = 'Подтвержден';
+    return $my_columns;
+}
+
+add_filter( 'manage_users_custom_column', 'true_user_is_approved_column_content', 25, 3 );
+
+function true_user_is_approved_column_content( $row_output, $column_id, $user ) {
+    if( 'is_email_approved' == $column_id ) {
+        // возвращаем, а не выводим!
+        return get_the_author_meta( 'is_email_approved', $user );
+    }
+    return $row_output;
+}
