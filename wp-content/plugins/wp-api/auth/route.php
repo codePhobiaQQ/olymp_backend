@@ -14,7 +14,7 @@ function authEndpoints() {
             'callback' => 'login',
             'permission_callback' => '__return_true',
             'args' => array(
-                'login' => array(
+                'email' => array(
                     'validate_callback' => 'sanitize_text_field'
                 ),
                 'password' => array(

@@ -184,7 +184,7 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 add_filter( 'manage_users_columns', 'true_user_is_approved_column' );
 
 function true_user_is_approved_column( $my_columns ) {
-    $my_columns[ 'is_email_approved' ] = 'Подтвержден';
+    $my_columns[ 'is_email_approved' ] = 'E-mail Подтвержден';
     return $my_columns;
 }
 
