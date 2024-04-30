@@ -197,3 +197,15 @@ function true_user_is_approved_column_content( $row_output, $column_id, $user ) 
     }
     return $row_output;
 }
+
+/** -----------------------------
+ * ----- MENU CUSTOMIZATION -----
+ * ------------------------------
+*/
+
+//// Add menu item for draft posts
+//function add_drafts_admin_menu_item() {
+//  // $page_title, $menu_title, $capability, $menu_slug, $callback_function
+//  add_posts_page(__('Drafts'), __('Drafts'), 'read', 'edit.php?post_status=draft&post_type=post');
+//}
+//add_action('admin_menu', 'add_drafts_admin_menu_item');
