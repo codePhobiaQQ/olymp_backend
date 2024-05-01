@@ -198,6 +198,14 @@ function true_user_is_approved_column_content( $row_output, $column_id, $user ) 
     return $row_output;
 }
 
+/** -----------------------------------
+ * ----- POST TYPES CUSTOMIZATION -----
+ * ------------------------------------
+*/
+require get_template_directory() . '/custom/post-types/olymp-post-type.php';
+add_action( 'init', 'register_olymp_post_type' );
+add_action( 'save_post_olymp', 'save_olymp_meta' );
+
 /** -----------------------------
  * ----- MENU CUSTOMIZATION -----
  * ------------------------------

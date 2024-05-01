@@ -15,6 +15,7 @@ function all_olymps_page_callback()
                 <th>Тип олимпиады</th>
                 <th>Дата начала</th>
                 <th>Дата окончания</th>
+                <th>Задние олимпиады</th>
                 <th>Настройки</th>
             </tr>
             </thead>
@@ -26,11 +27,20 @@ function all_olymps_page_callback()
             foreach ($olymp_types as $type => $label) {
                 $start_date = get_option('qualifying_stage_start_date_' . $type);
                 $end_date = get_option('qualifying_stage_end_date_' . $type);
+
+                $quiz_id = get_option('qualifying_stage_quiz_' . $type);
+                $quiz_data = get_post($quiz_id);
+                $quiz_link = admin_url('admin.php?page=mlw_quiz_options&quiz_id=' . preg_replace('/\D/', '', $quiz_data->post_content));
+
                 ?>
+
                 <tr>
                     <td><?php echo $label; ?></td>
                     <td><?php echo $start_date; ?></td>
                     <td><?php echo $end_date; ?></td>
+                    <td>
+                        <a href="<?php echo $quiz_link ?>"><?php echo $quiz_data->post_title; ?></a>
+                    </td>
                     <td><a href="<?php echo admin_url('admin.php?page=qualifying-stage-' . $type); ?>">Настройки</a></td>
                 </tr>
                 <?php
@@ -46,46 +56,49 @@ function all_olymps_page_callback()
 /// --------------------
 //  ---- OLYMP_PAGE ----
 // ---------------------
-// Массив типов олимпиад
-$olymp_types = array(
-    'cryptography' => 'Криптография',
-    'mathematics' => 'Математика',
-    'english' => 'Английский',
-    'history' => 'История'
-    // Добавьте другие типы олимпиад по мере необходимости
-);
+// Получаем типы олимпиад из post-type "olymp_types"
+function get_olymp_types() {
+    $olymp_types = array();
 
-// Функция для обработки сохранения настроек
-//function save_qualifying_stage_options($type)
-//{
-//    if (isset($_POST['submit'])) {
-//        $start_date = isset($_POST['qualifying_stage_start_date_' . $type]) ? sanitize_text_field($_POST['qualifying_stage_start_date_' . $type]) : '';
-//        $end_date = isset($_POST['qualifying_stage_end_date_' . $type]) ? sanitize_text_field($_POST['qualifying_stage_end_date_' . $type]) : '';
-//
-//        // Проверяем, что дата начала меньше даты окончания
-//        if ($start_date >= $end_date) {
-//            add_settings_error(
-//                'qualifying_stage_options_' . $type,
-//                'invalid-dates',
-//                'Дата начала олимпиады должна быть раньше даты окончания',
-//                'error'
-//            );
-//            return;
-//        }
-//
-//        // Сохраняем данные, если проверка пройдена успешно
-//        update_option('qualifying_stage_start_date_' . $type, $start_date);
-//        update_option('qualifying_stage_end_date_' . $type, $end_date);
-//
-//        add_settings_error(
-//            'qualifying_stage_options_' . $type,
-//            'settings-saved',
-//            'Настройки сохранены',
-//            'updated'
-//        );
-//    }
-//}
+    $args = array(
+        'post_type'      => 'olymp',
+        'posts_per_page' => -1,
+    );
 
+    $types_query = new WP_Query( $args );
+
+    if ( $types_query->have_posts() ) {
+        while ( $types_query->have_posts() ) {
+            $types_query->the_post();
+            $slug = get_post_field( 'slug' );
+            $title = get_the_title();
+            $olymp_types[$slug] = $title;
+        }
+        wp_reset_postdata();
+    }
+
+    return $olymp_types;
+}
+// Используем полученные типы олимпиад
+$olymp_types = get_olymp_types();
+
+
+// Callback функция для поля выбора квиза
+function qualifying_stage_quiz_field_render($args)
+{
+    $type = $args['type'];
+    $selected_quiz = get_option('qualifying_stage_quiz_' . $type);
+    $quizzes = get_posts(array('post_type' => 'qsm_quiz')); // Замените на ваш тип квиза
+
+    ?>
+    <select name="qualifying_stage_quiz_<?php echo $type; ?>" id="qualifying_stage_quiz_<?php echo $type; ?>">
+        <option value="">Выберите квиз</option>
+        <?php foreach ($quizzes as $quiz) : ?>
+            <option value="<?php echo $quiz->ID; ?>" <?php selected($selected_quiz, $quiz->ID); ?>><?php echo $quiz->post_title; ?></option>
+        <?php endforeach; ?>
+    </select>
+    <?php
+}
 
 function qualifying_stage_settings_init()
 {
@@ -94,6 +107,7 @@ function qualifying_stage_settings_init()
     foreach ($olymp_types as $type => $label) {
         register_setting('qualifying_stage_options_' . $type, 'qualifying_stage_start_date_' . $type);
         register_setting('qualifying_stage_options_' . $type, 'qualifying_stage_end_date_' . $type);
+        register_setting('qualifying_stage_options_' . $type, 'qualifying_stage_quiz_' . $type); // Регистрация опции для квиза
 
         add_settings_section(
             'qualifying_stage_section_' . $type,
@@ -115,6 +129,15 @@ function qualifying_stage_settings_init()
             'qualifying_stage_end_date_field_' . $type,
             'Дата окончания олимпиады "' . $label . '"',
             'qualifying_stage_end_date_field_render',
+            'qualifying_stage_options_' . $type,
+            'qualifying_stage_section_' . $type,
+            array('type' => $type) // Передаем тип олимпиады в качестве аргумента
+        );
+
+        add_settings_field(
+            'qualifying_stage_quiz_field_' . $type,
+            'Выберите квиз для олимпиады "' . $label . '"',
+            'qualifying_stage_quiz_field_render',
             'qualifying_stage_options_' . $type,
             'qualifying_stage_section_' . $type,
             array('type' => $type) // Передаем тип олимпиады в качестве аргумента
@@ -150,9 +173,6 @@ function qualifying_stage_options_page() {
 
     $page_slug = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : 'cryptography'; // Значение по умолчанию
     $type = str_replace('qualifying-stage-', '', $page_slug); // Обрезаем префикс для получения типа олимпиады
-
-//    // Вызываем функцию обработки сохранения настроек
-//    save_qualifying_stage_options($type);
 
     ?>
     <div class="wrap">
