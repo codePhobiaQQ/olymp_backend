@@ -203,5 +203,6 @@ function true_user_is_approved_column_content( $row_output, $column_id, $user ) 
  * ------------------------------
 */
 require get_template_directory() . '/custom/menu-customization/qualifying-stage.php';
-add_action('admin_menu', 'add_qualifying_stage_page');
+add_action('admin_menu', 'add_qualifying_stage_menu_item');
+add_action('admin_init', 'qualifying_stage_settings_init');
 

@@ -20,15 +20,8 @@ RewriteRule . /index.php [L]
 # созданы автоматически и подлежат изменению только через фильтры WordPress.
 # Сделанные вручную изменения между этими маркерами будут перезаписаны.
 <IfModule mod_headers.c>
-<FilesMatch "\.(ttf|ttc|otf|eot|woff|font.css|css|woff2)$">
-SetEnvIf Origin "^http(s)?://(.+\.)?(localhost)$" origin_is=$0
-Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
-Header set Access-Control-Allow-Credentials "true"
-</FilesMatch>
-<FilesMatch "\.(avifs?|bmp|cur|gif|ico|jpe?g|jxl|a?png|svgz?|webp)$">
-SetEnvIf Origin "^http(s)?://(.+\.)?(localhost)$" origin_is=$0
-Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
-Header set Access-Control-Allow-Credentials "true"
-</FilesMatch>
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type"
 </IfModule>
 # END enable-cors

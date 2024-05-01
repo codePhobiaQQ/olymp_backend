@@ -4,55 +4,188 @@
 // подробнее смотрите API Настроек: http://wp-kama.ru/id_3773/api-optsiy-nastroek.html
 
 // MAIN - PAGE
-function all_olymps_page_callback(){
+function all_olymps_page_callback()
+{
     ?>
     <div class="wrap">
         <h2><?php echo get_admin_page_title() ?></h2>
-
-        <?php
-        // settings_errors() не срабатывает автоматом на страницах отличных от опций
-        if( get_current_screen()->parent_base !== 'options-general' )
-            settings_errors('название_опции');
-        ?>
-
-        <form action="options.php" method="POST">
+        <table class="widefat">
+            <thead>
+            <tr>
+                <th>Тип олимпиады</th>
+                <th>Дата начала</th>
+                <th>Дата окончания</th>
+                <th>Настройки</th>
+            </tr>
+            </thead>
+            <tbody>
             <?php
-            settings_fields("opt_group");     // скрытые защитные поля
-            do_settings_sections("opt_page"); // секции с настройками (опциями).
-            submit_button();
+            global $olymp_types; // Получаем доступ к глобальной переменной с типами олимпиад
+
+            // Выводим каждый тип олимпиады и соответствующие ему даты начала, окончания и ссылку на страницу настроек
+            foreach ($olymp_types as $type => $label) {
+                $start_date = get_option('qualifying_stage_start_date_' . $type);
+                $end_date = get_option('qualifying_stage_end_date_' . $type);
+                ?>
+                <tr>
+                    <td><?php echo $label; ?></td>
+                    <td><?php echo $start_date; ?></td>
+                    <td><?php echo $end_date; ?></td>
+                    <td><a href="<?php echo admin_url('admin.php?page=qualifying-stage-' . $type); ?>">Настройки</a></td>
+                </tr>
+                <?php
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+    <?php
+}
+
+
+/// --------------------
+//  ---- OLYMP_PAGE ----
+// ---------------------
+// Массив типов олимпиад
+$olymp_types = array(
+    'cryptography' => 'Криптография',
+    'mathematics' => 'Математика',
+    'english' => 'Английский',
+    'history' => 'История'
+    // Добавьте другие типы олимпиад по мере необходимости
+);
+
+// Функция для обработки сохранения настроек
+//function save_qualifying_stage_options($type)
+//{
+//    if (isset($_POST['submit'])) {
+//        $start_date = isset($_POST['qualifying_stage_start_date_' . $type]) ? sanitize_text_field($_POST['qualifying_stage_start_date_' . $type]) : '';
+//        $end_date = isset($_POST['qualifying_stage_end_date_' . $type]) ? sanitize_text_field($_POST['qualifying_stage_end_date_' . $type]) : '';
+//
+//        // Проверяем, что дата начала меньше даты окончания
+//        if ($start_date >= $end_date) {
+//            add_settings_error(
+//                'qualifying_stage_options_' . $type,
+//                'invalid-dates',
+//                'Дата начала олимпиады должна быть раньше даты окончания',
+//                'error'
+//            );
+//            return;
+//        }
+//
+//        // Сохраняем данные, если проверка пройдена успешно
+//        update_option('qualifying_stage_start_date_' . $type, $start_date);
+//        update_option('qualifying_stage_end_date_' . $type, $end_date);
+//
+//        add_settings_error(
+//            'qualifying_stage_options_' . $type,
+//            'settings-saved',
+//            'Настройки сохранены',
+//            'updated'
+//        );
+//    }
+//}
+
+
+function qualifying_stage_settings_init()
+{
+    global $olymp_types; // Используем глобальную переменную $olymp_types
+
+    foreach ($olymp_types as $type => $label) {
+        register_setting('qualifying_stage_options_' . $type, 'qualifying_stage_start_date_' . $type);
+        register_setting('qualifying_stage_options_' . $type, 'qualifying_stage_end_date_' . $type);
+
+        add_settings_section(
+            'qualifying_stage_section_' . $type,
+            'Настройки олимпиады "' . $label . '"',
+            'qualifying_stage_section_callback',
+            'qualifying_stage_options_' . $type
+        );
+
+        add_settings_field(
+            'qualifying_stage_start_date_field_' . $type,
+            'Дата начала олимпиады "' . $label . '"',
+            'qualifying_stage_start_date_field_render',
+            'qualifying_stage_options_' . $type,
+            'qualifying_stage_section_' . $type,
+            array('type' => $type) // Передаем тип олимпиады в качестве аргумента
+        );
+
+        add_settings_field(
+            'qualifying_stage_end_date_field_' . $type,
+            'Дата окончания олимпиады "' . $label . '"',
+            'qualifying_stage_end_date_field_render',
+            'qualifying_stage_options_' . $type,
+            'qualifying_stage_section_' . $type,
+            array('type' => $type) // Передаем тип олимпиады в качестве аргумента
+        );
+    }
+}
+
+// Функция отображения секции настроек
+function qualifying_stage_section_callback()
+{
+    echo '<p>Выберите даты начала и окончания олимпиады:</p>';
+}
+
+// Функция отображения поля для выбора даты начала
+function qualifying_stage_start_date_field_render($args)
+{
+    $type = $args['type'];
+    $start_date = get_option('qualifying_stage_start_date_' . $type);
+    echo '<input type="date" name="qualifying_stage_start_date_' . $type . '" value="' . esc_attr($start_date) . '" />';
+}
+
+// Функция отображения поля для выбора даты окончания
+function qualifying_stage_end_date_field_render($args)
+{
+    $type = $args['type'];
+    $end_date = get_option('qualifying_stage_end_date_' . $type);
+    echo '<input type="date" name="qualifying_stage_end_date_' . $type . '" value="' . esc_attr($end_date) . '" />';
+}
+
+// Функция отображения страницы настроек
+function qualifying_stage_options_page() {
+    global $olymp_types; // Используем глобальную переменную $olymp_types
+
+    $page_slug = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : 'cryptography'; // Значение по умолчанию
+    $type = str_replace('qualifying-stage-', '', $page_slug); // Обрезаем префикс для получения типа олимпиады
+
+//    // Вызываем функцию обработки сохранения настроек
+//    save_qualifying_stage_options($type);
+
+    ?>
+    <div class="wrap">
+        <h2>Настройки олимпиады "<?php echo $olymp_types[$type] ?>"</h2>
+        <form action="options.php" method="post">
+            <?php
+            settings_fields('qualifying_stage_options_' . $type);
+            do_settings_sections('qualifying_stage_options_' . $type);
+            submit_button('Сохранить', 'primary', 'submit', false); // Добавляем кнопку сохранения
             ?>
         </form>
     </div>
     <?php
 }
 
-// OLYMP - PAGE
-function single_olymp_page_callback(){
-    ?>
-    <div class="wrap">
-        <h2><?php echo get_admin_page_title() ?></h2>
-        <?php
-        // settings_errors() не срабатывает автоматом на страницах отличных от опций
-        if( get_current_screen()->parent_base !== 'options-general' )
-            settings_errors('название_опции');
-        ?>
-        <form action="options.php" method="POST">
-            <?php
-            settings_fields("opt_group");     // скрытые защитные поля
-            do_settings_sections("opt_page"); // секции с настройками (опциями).
-            submit_button();
-            ?>
-        </form>
-    </div>
-    <?php
-}
+function add_qualifying_stage_menu_item()
+{
+    global $olymp_types; // Используем глобальную переменную $olymp_types
 
-function add_qualifying_stage_page() {
-    // add_menu_page( 'Отбророчный этап', 'Отбророчный этап', 'manage_options', 'site-options', 'add_my_setting', '', 100 );
-    $MENU_NAME = 'Отбророчный этап';
-    // ---------
-    add_menu_page( $MENU_NAME, $MENU_NAME, 'manage_options', 'qualifying-stage' );
-    add_submenu_page( 'qualifying-stage', $MENU_NAME, 'Олимпиады', 'manage_options', 'qualifying-stage', 'all_olymps_page_callback');
-    add_submenu_page( 'qualifying-stage', 'Отборочной этап олимпиады "Криптогарфия"', 'Криптогарфия', 'manage_options', 'qualifying-stage-cryptography', 'single_olymp_page_callback');
-}
+    $MENU_NAME = 'Отборочные этапы олимпиад';
 
+    // Добавляем родительское меню
+    add_menu_page($MENU_NAME, $MENU_NAME, 'manage_options', 'qualifying-stage', 'all_olymps_page_callback');
+
+    // Добавляем подменю для каждого типа олимпиады
+    foreach ($olymp_types as $type => $label) {
+        add_submenu_page(
+            'qualifying-stage', // Родительское меню
+            'Отборочной этап олимпиады "' . $label . '"', // Заголовок страницы
+            $label, // Название пункта меню
+            'manage_options', // Уровень доступа
+            'qualifying-stage-' . $type, // Slug страницы
+            'qualifying_stage_options_page' // Callback функция для отображения содержимого страницы
+        );
+    }
+}
