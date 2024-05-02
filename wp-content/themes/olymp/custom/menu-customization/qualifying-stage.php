@@ -55,6 +55,7 @@ function all_olymps_page_callback()
 /// --------------------
 //  ---- OLYMP_PAGE ----
 // ---------------------
+
 // Получаем типы олимпиад из post-type "olymp_types"
 function get_olymp_types() {
     $olymp_types = array();
@@ -80,7 +81,6 @@ function get_olymp_types() {
 }
 // Используем полученные типы олимпиад
 $olymp_types = get_olymp_types();
-
 
 // Callback функция для поля выбора квиза
 function qualifying_stage_quiz_field_render($args)

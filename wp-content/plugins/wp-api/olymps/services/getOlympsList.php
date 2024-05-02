@@ -8,9 +8,9 @@ function getOlympsList() {
     $args = array(
         'post_type' => 'olymp',
     );
-
     $olymps = get_posts($args);
-    $olymps_with_meta = array(); // Создаем новый массив для хранения всех элементов
+
+    $olymps_with_meta = array();
 
     foreach ($olymps as $olymp) {
         $fields = get_fields($olymp->ID);
