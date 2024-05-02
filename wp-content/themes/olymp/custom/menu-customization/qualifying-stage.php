@@ -52,7 +52,6 @@ function all_olymps_page_callback()
     <?php
 }
 
-
 /// --------------------
 //  ---- OLYMP_PAGE ----
 // ---------------------

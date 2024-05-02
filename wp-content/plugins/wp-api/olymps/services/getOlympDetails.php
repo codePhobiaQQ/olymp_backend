@@ -1,7 +1,7 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . '/../../core/getChildPages.php';
-require_once plugin_dir_path(__FILE__) . '/../../core/getAcfPageData.php';
+require_once plugin_dir_path(__FILE__) . '/../../core/functions/getChildPages.php';
+require_once plugin_dir_path(__FILE__) . '/../../core/functions/getAcfPageData.php';
 require_once plugin_dir_path(__FILE__) . '/../dto/getOlympsList.dto.php';
 require_once plugin_dir_path(__FILE__) . './getOlympDetails.php';
 

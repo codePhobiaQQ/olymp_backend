@@ -30,8 +30,10 @@ function register_olymp_post_type() {
         'supports' => array( 'title',
 //            'editor',
 //            'excerpt',
-            'custom-fields' ),
-        'menu_position' => 100,
+            'custom-fields',
+            'thumbnail'
+        ),
+        'menu_position' => 101,
         'register_meta_box_cb' => 'add_olymp_metaboxes',
         'menu_icon'     => 'dashicons-awards'
     );
@@ -52,39 +54,10 @@ function add_olymp_metaboxes() {
 
 function olymp_info_callback( $post ) {
     // Получаем значения метаполей
-    $name = get_post_meta( $post->ID, 'name', true );
     $slug = get_post_meta( $post->ID, 'slug', true );
-    $description = get_post_meta( $post->ID, 'description', true );
-
-    // Выводим поля для ввода данных
     ?>
-    <p><label for="name">Name:</label><br />
-        <input type="text" id="name" name="name" value="<?php echo esc_attr( $name ); ?>" /></p>
-
     <p><label for="slug">Slug:</label><br />
         <input type="text" id="slug" name="slug" value="<?php echo esc_attr( $slug ); ?>" /></p>
-
-    <p><label for="description">Description:</label><br />
-        <?php
-        // Проверяем, установлен ли Advanced Editor Tools
-        if ( function_exists( 'advanced_editor_field' ) ) {
-            advanced_editor_field(
-                array(
-                    'name' => 'description',
-                    'value' => $description,
-                    'settings' => array(
-                        // Добавьте здесь настройки Advanced Editor Tools, если необходимо
-                    )
-                )
-            );
-        } else {
-            // Если плагин не установлен, выводим обычное текстовое поле
-            ?>
-            <textarea id="description" name="description"><?php echo esc_textarea( $description ); ?></textarea>
-            <?php
-        }
-        ?>
-    </p>
     <?php
 }
 
@@ -92,20 +65,12 @@ function save_olymp_meta( $post_id ) {
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
         return;
     }
-
     // Проверяем права доступа
     if ( ! current_user_can( 'edit_post', $post_id ) ) {
         return;
     }
-
     // Сохраняем значения метаполей
-    if ( isset( $_POST['name'] ) ) {
-        update_post_meta( $post_id, 'name', sanitize_text_field( $_POST['name'] ) );
-    }
     if ( isset( $_POST['slug'] ) ) {
         update_post_meta( $post_id, 'slug', sanitize_text_field( $_POST['slug'] ) );
-    }
-    if ( isset( $_POST['description'] ) ) {
-        update_post_meta( $post_id, 'description', wp_kses_post( $_POST['description'] ) );
     }
 }
