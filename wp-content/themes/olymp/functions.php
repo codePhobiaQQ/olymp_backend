@@ -214,3 +214,10 @@ require get_template_directory() . '/custom/menu-customization/qualifying-stage.
 add_action('admin_menu', 'add_qualifying_stage_menu_item');
 add_action('admin_init', 'qualifying_stage_settings_init');
 
+/** -----------------------------
+ * ----- CUSTOMIZATION TOKEN ----
+ * ------------------------------
+ */
+require get_template_directory() . '/custom/auth/customise-token.php';
+add_filter( 'jwt_auth_token_before_sign', 'customize_token', 10, 2);
+add_filter( 'jwt_auth_token_before_dispatch', 'customize_token_response', 10, 2 );
