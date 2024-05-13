@@ -3,6 +3,7 @@
 function login($params) {
     $email = $params->get_param('email');
     $password = $params->get_param('password');
+
     // Попытка аутентификации пользователя
     $user = wp_authenticate( $email, $password );
 

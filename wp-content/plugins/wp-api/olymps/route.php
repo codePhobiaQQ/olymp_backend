@@ -25,7 +25,7 @@ function regOlympsEndpoints() {
         array(
             'methods' => 'GET',
             'callback' => 'getQualifyingStageTask',
-            'permission_callback' => '__return_true',
+            'permission_callback' => 'is_user_logged_in',
         )
     );
 

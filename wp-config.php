@@ -80,6 +80,7 @@ define( 'WP_ENVIRONMENT_TYPE', 'staging' );
  *
  * @since 2.6.0
  */
+
 define( 'AUTH_KEY',         getenv_docker('WORDPRESS_AUTH_KEY',         'e172cc773508e7e0d87505612cf97a640127a95a') );
 define( 'SECURE_AUTH_KEY',  getenv_docker('WORDPRESS_SECURE_AUTH_KEY',  '30bb4882cec02bf31bf24c714a4e3e8e7eacc015') );
 define( 'LOGGED_IN_KEY',    getenv_docker('WORDPRESS_LOGGED_IN_KEY',    'e8703fd63ecdd069dae89a9ee52096461659d466') );
@@ -88,6 +89,10 @@ define( 'AUTH_SALT',        getenv_docker('WORDPRESS_AUTH_SALT',        '467c637
 define( 'SECURE_AUTH_SALT', getenv_docker('WORDPRESS_SECURE_AUTH_SALT', '2499ab75d0c8bd953e8347ae457ddcdcaaf726ab') );
 define( 'LOGGED_IN_SALT',   getenv_docker('WORDPRESS_LOGGED_IN_SALT',   '52afadb3572ef2e246da7ea6bf5b6a5cffeaef00') );
 define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       'af24741cc65d7594674fd239267780dd9b30a6b4') );
+
+define('JWT_AUTH_SECRET_KEY', 'hello_bro_how_are_you');
+define('JWT_AUTH_CORS_ENABLE', true);
+
 // (See also https://wordpress.stackexchange.com/a/152905/199287)
 
 /**#@-*/

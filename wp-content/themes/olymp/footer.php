@@ -25,6 +25,11 @@
 				printf( esc_html__( 'Theme: %1$s by %2$s.', 'olymp' ), 'olymp', '<a href="http://underscores.me/">Underscores.me</a>' );
 				?>
 		</div><!-- .site-info -->
+
+        <div class="entry-content">
+            <?php echo do_shortcode('[qsm quiz=2]') ?>
+        </div>
+
 	</footer><!-- #colophon -->
 </div><!-- #page -->
 
