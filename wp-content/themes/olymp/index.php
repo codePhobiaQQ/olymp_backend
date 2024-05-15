@@ -11,10 +11,6 @@
  *
  * @package olymp
  */
-//get_header();
-?>
 
-123
-
-<?php
-//get_footer();
+get_header();
+get_footer();
