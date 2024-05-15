@@ -20,7 +20,7 @@ function customize_token( $token, $user ) {
     }
 
     // Добавляем дополнительное поле в токен (например, isEmailApprove)
-    $token['data']['user']['isEmailApprove'] = $user->is_email_approved;
+    $token['data']['user']['isApproval'] = $user->is_email_approved;
 
     // Добавляем email пользователя в токен
     $token['data']['user']['email'] = $user->user_email;
