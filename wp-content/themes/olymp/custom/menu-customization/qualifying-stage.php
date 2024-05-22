@@ -21,7 +21,7 @@ function all_olymps_page_callback()
             </thead>
             <tbody>
             <?php
-            global $olymp_types; // Получаем доступ к глобальной переменной с типами олимпиад
+            global $olymp_types;
 
             // Выводим каждый тип олимпиады и соответствующие ему даты начала, окончания и ссылку на страницу настроек
             foreach ($olymp_types as $type => $label) {
@@ -30,7 +30,14 @@ function all_olymps_page_callback()
 
                 $quiz_id = get_option('qualifying_stage_quiz_' . $type);
                 $quiz_data = get_post($quiz_id);
-                $quiz_link = admin_url('admin.php?page=mlw_quiz_options&quiz_id=' . preg_replace('/\D/', '', $quiz_data->post_content));
+
+                if ($quiz_data) {
+                    $quiz_link = admin_url('admin.php?page=mlw_quiz_options&quiz_id=' . preg_replace('/\D/', '', $quiz_data->post_content));
+                    $quiz_title = $quiz_data->post_title;
+                } else {
+                    $quiz_link = '';
+                    $quiz_title = '';
+                }
 
                 ?>
 
@@ -39,7 +46,7 @@ function all_olymps_page_callback()
                     <td><?php echo $start_date; ?></td>
                     <td><?php echo $end_date; ?></td>
                     <td>
-                        <a href="<?php echo $quiz_link ?>"><?php echo $quiz_data->post_title; ?></a>
+                        <a href="<?php echo $quiz_link ?>"><?php echo $quiz_title; ?></a>
                     </td>
                     <td><a href="<?php echo admin_url('admin.php?page=qualifying-stage-' . $type); ?>">Настройки</a></td>
                 </tr>

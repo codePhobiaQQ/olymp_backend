@@ -33,7 +33,7 @@ function regOlympsEndpoints() {
     // Get olymp Details by link
     register_rest_route(
         'custom/v2',
-        '/olymps/(?P<olymp_link>[a-zA-Z0-9_\-]+)',
+        '/olymps/(?P<olymp_slug>[a-zA-Z0-9_\-]+)',
 
         array(
             'methods' => 'GET',

@@ -7,7 +7,9 @@ require_once plugin_dir_path(__FILE__) . '/../dto/getOlympsList.dto.php';
 function getOlympsList() {
     $args = array(
         'post_type' => 'olymp',
+        'posts_per_page' => -1,
     );
+
     $olymps = get_posts($args);
 
     $olymps_with_meta = array();
@@ -22,14 +24,14 @@ function getOlympsList() {
         $quiz = get_option('qualifying_stage_quiz_' . $type);
 
         // Проверяем, что $fields не является false, прежде чем добавлять его к массиву
-        if ($fields !== false) {
-            $fields['ID'] = $olymp->ID;
-            $fields['start_date'] = $start_date;
-            $fields['end_date'] = $end_date;
-            $fields['quiz'] = $quiz;
-
-            $olymps_with_meta[] = $fields;
-        }
+        $olymps_with_meta[] = array(
+            'ID' => $olymp->ID,
+            'name' => $olymp->post_title,
+            'description' => $fields['description'],
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'slug' => $type,
+        );
     }
 
     return $olymps_with_meta;
