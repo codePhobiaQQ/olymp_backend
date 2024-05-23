@@ -214,6 +214,10 @@ require get_template_directory() . '/custom/menu-customization/qualifying-stage.
 add_action('admin_menu', 'add_qualifying_stage_menu_item');
 add_action('admin_init', 'qualifying_stage_settings_init');
 
+require get_template_directory() . '/custom/menu-customization/finishing-stage.php';
+add_action('admin_menu', 'add_finishing_stage_menu_item');
+add_action('admin_init', 'finishing_stage_settings_init');
+
 /** -----------------------------
  * ----- CUSTOMIZATION TOKEN ----
  * ------------------------------
