@@ -1,18 +1,115 @@
 <?php
 
-function getQuiz() {
-    return do_shortcode('[qsm quiz=2]');
+// TODO: think how to make this mapping automatic
+$quiz_categories = array(
+    'cryptography' => 'Криптография',
+    'math' => 'Математика',
+    'phys' => 'Физика',
+    'chem' => 'Химия',
+);
+
+function getQuiz($quiz_id) {
+    return do_shortcode('[qsm quiz=' . $quiz_id . ']');
+}
+
+function extract_variant_count($title) {
+    if (preg_match('/\{(\d+)-(\d+)\}/', $title, $matches)) {
+        return (int)$matches[2];
+    }
+    return 1; // Если не найдено, возвращаем 1
+}
+
+function extract_quiz_id($content) {
+    if (preg_match('/\[mlw_quizmaster\s+quiz=(\d+)\]/', $content, $matches)) {
+        return (int)$matches[1];
+    }
+    return null; // Если не найдено, возвращаем null
 }
 
 function getQualifyingStageTask($request)
 {
+    global $quiz_categories;
     $olymp_slug = $request->get_param('olymp_slug');
-    $quiz_id = get_option('qualifying_stage_quiz_' . $olymp_slug);
-    // $quiz_content = get_post_field('post_content', $quiz_id);
 
-    $quiz_content = do_shortcode('[qsm quiz=2]');
+    // Получаем категорию по olymp_slug
+    $category_name = isset($quiz_categories[$olymp_slug]) ? $quiz_categories[$olymp_slug] : null;
 
-    // Используйте ob_start и ob_get_clean для формирования содержимого ответа
+    if (!$category_name) {
+        return new WP_REST_Response('Некорректный olymp_slug.', 400);
+    }
+
+    // ------ Get Quizzes ------
+    $args = array(
+        'post_type' => 'qsm_quiz',
+        'post_status' => 'publish',
+        'numberposts' => -1
+    );
+    $quizzes = get_posts($args);
+
+    // Фильтрация тестов по категории
+    $filtered_quizzes = array_filter($quizzes, function($quiz) use ($category_name) {
+        return strpos($quiz->post_title, $category_name) !== false;
+    });
+
+    // Если нет тестов для данной категории
+    if (empty($filtered_quizzes)) {
+        return new WP_REST_Response('Тест для данной категории не найден.', 404);
+    }
+
+    // ----- Validation of user metadata -----
+    $current_user = wp_get_current_user();
+
+    // Список необходимых метаданных
+    $required_meta_keys = array('first_name', 'second_name', 'patronymic', 'school', 'grade');
+    $missing_meta = array();
+
+    foreach ($required_meta_keys as $key) {
+        if (!get_user_meta($current_user->ID, $key, true)) {
+            $missing_meta[] = $key;
+        }
+    }
+
+    if (!empty($missing_meta)) {
+        return new WP_REST_Response('Отсутствуют необходимые метаданные: ' . implode(', ', $missing_meta), 400);
+    }
+
+    // GETTING TASK VARIANT
+    // $user_data_string = json_encode($current_user->data);
+    $user_data_string = json_encode(array(
+        'user_login' => $current_user->data->ID,
+        'user_registered' => $current_user->data->user_registered,
+    ));
+    $hash = hash('sha256', $user_data_string);
+    $hash_number = hexdec(substr($hash, 0, 8));
+
+    // Определение количества вариантов для тестов в данной категории
+    $variant_counts = array_map('extract_variant_count', wp_list_pluck($filtered_quizzes, 'post_title'));
+    $max_variants = max($variant_counts);
+
+    // Вычисление варианта для пользователя
+    $variant = $hash_number % $max_variants;
+
+    // Получение класса ученика
+    $grade = get_user_meta($current_user->ID, 'grade', true);
+
+    // Фильтрация тестов по вычисленному варианту и классу
+    $selected_quiz = null;
+    foreach ($filtered_quizzes as $quiz) {
+        if (extract_variant_count($quiz->post_title) == $variant + 1 && strpos($quiz->post_title, "{{$grade}-") !== false) {
+            $selected_quiz = $quiz;
+            break;
+        }
+    }
+
+    if (!$selected_quiz) {
+        return new WP_REST_Response('Подходящий тест не найден.', 404);
+    }
+
+    $quiz_id = extract_quiz_id($selected_quiz->post_content);
+    if (!$quiz_id) {
+        return new WP_REST_Response('ID викторины не найден в содержимом поста.', 500);
+    }
+
     ob_start();
     ?>
     <!DOCTYPE html>
@@ -23,19 +120,14 @@ function getQualifyingStageTask($request)
         <title>Quiz</title>
         <?php wp_head(); ?>
         <script>
-            // Этот скрипт будет добавлять JWT токен к заголовкам всех AJAX запросов
             document.addEventListener('DOMContentLoaded', function() {
                 const jwtToken = window.localStorage.getItem("user");
-
-                // Используем fetch API и перехватываем запросы
                 const originalFetch = window.fetch;
                 window.fetch = async function(url, options = {}) {
                     options.headers = options.headers || {};
                     options.headers['Authorization'] = 'Bearer ' + jwtToken;
                     return originalFetch(url, options);
                 };
-
-                // Если используется jQuery
                 if (window.jQuery) {
                     jQuery.ajaxSetup({
                         beforeSend: function(xhr) {
@@ -47,8 +139,8 @@ function getQualifyingStageTask($request)
         </script>
     </head>
     <body>
-    <?php echo getQuiz(); ?>
-    <div id='mountHere'></div>
+    <?php echo getQuiz($quiz_id); ?>
+    <div id='qualifying-stage'></div>
     <?php wp_footer(); ?>
     </body>
     </html>
