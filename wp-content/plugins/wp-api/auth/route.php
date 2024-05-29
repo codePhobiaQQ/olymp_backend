@@ -1,7 +1,8 @@
 <?php
 
 require_once plugin_dir_path(__FILE__) . 'services/registration.php';
-require_once plugin_dir_path(__FILE__) . 'services/approve.php';
+require_once plugin_dir_path(__FILE__) . 'services/send-approval-email.php';
+require_once plugin_dir_path(__FILE__) . 'services/approve-email.php';
 
 function authEndpoints() {
     // Login was done by the lib JWT wordpress auth
@@ -26,7 +27,6 @@ function authEndpoints() {
         )
     );
 
-
     // Approve email route
     register_rest_route(
         'custom/v2',
@@ -34,7 +34,7 @@ function authEndpoints() {
 
         array(
             'methods' => 'POST',
-            'callback' => 'approve',
+            'callback' => 'approve_email',
             'permission_callback' => '__return_true',
         )
     );

@@ -1,6 +1,6 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . '../approve-email.php';
+require_once plugin_dir_path(__FILE__) . '../emails-templates.php';
 
 function registration($request) {
     $username = sanitize_email($request->get_param('username'));
@@ -52,7 +52,7 @@ function registration($request) {
     update_user_meta($user_id, 'is_email_approved', 'false');
 
     // GENERATE JWT TOKEN
-     $jwt_token = get_jwt_token($username, $password);
+    $jwt_token = get_jwt_token($username, $password);
 
     return new WP_REST_Response(array('token' => $jwt_token), 200);
 }
