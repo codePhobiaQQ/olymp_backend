@@ -202,9 +202,13 @@ function true_user_is_approved_column_content( $row_output, $column_id, $user ) 
  * ----- POST TYPES CUSTOMIZATION -----
  * ------------------------------------
 */
-require get_template_directory() . '/custom/post-types/olymp-post-type.php';
+require get_template_directory() . '/custom/post-types/olymp.php';
 add_action( 'init', 'register_olymp_post_type' );
 add_action( 'save_post_olymp', 'save_olymp_meta' );
+
+require get_template_directory() . '/custom/post-types/organizing-committees.php';
+add_action( 'init', 'register_organizing_committees_post_type' );
+// add_action( 'save_post', 'save_organizing_committee_meta' );
 
 /** -----------------------------
  * ----- MENU CUSTOMIZATION -----
@@ -217,6 +221,9 @@ add_action('admin_init', 'qualifying_stage_settings_init');
 require get_template_directory() . '/custom/menu-customization/finishing-stage.php';
 add_action('admin_menu', 'add_finishing_stage_menu_item');
 add_action('admin_init', 'finishing_stage_settings_init');
+
+// require get_template_directory() . '/custom/menu-customization/qualifying-results.php';
+// add_action('admin_menu', 'add_qualifying_results_menu_item');
 
 /** -----------------------------
  * ----- CUSTOMIZATION TOKEN ----

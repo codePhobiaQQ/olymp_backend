@@ -16,7 +16,7 @@ function extract_variant_count($title) {
     if (preg_match('/\{(\d+)-(\d+)\}/', $title, $matches)) {
         return (int)$matches[2];
     }
-    return 1; // Если не найдено, возвращаем 1
+    return 1;
 }
 
 function extract_quiz_id($content) {
