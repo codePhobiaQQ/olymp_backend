@@ -1,6 +1,5 @@
 <?php
 
-//require get_template_directory() . './custom/consts.php';
 require_once plugin_dir_path(__FILE__) . '/../../core/functions/getChildPages.php';
 require_once plugin_dir_path(__FILE__) . '/../dto/getOlympsList.dto.php';
 
@@ -10,15 +9,7 @@ function getOlympsList() {
         'posts_per_page' => -1,
     );
 
-//     $args_quiz = array(
-//         'post_type' => 'qsm_quiz',
-//         'post_status' => 'publish',
-//         'numberposts' => -1
-//     );
-
     $olymps = get_posts($args);
-//     $quizzes = get_posts($args_quiz);
-
     $olymps_with_meta = array();
 
     foreach ($olymps as $olymp) {

@@ -5,9 +5,7 @@ require_once plugin_dir_path(__FILE__) . '/../../core/functions/getAcfPageData.p
 require_once plugin_dir_path(__FILE__) . '/../dto/getOlympsList.dto.php';
 require_once plugin_dir_path(__FILE__) . './getOlympDetails.php';
 
-function getOlympDetails($request)
-{
-    $olymp_slug = $request->get_param('olymp_slug');
+function getOlymp($olymp_slug) {
     $olymp_list = getOlympsList();
     $result = null;
 
@@ -20,8 +18,14 @@ function getOlympDetails($request)
     }
 
     if ($result === null) {
-        return new WP_Error('olymp_not_found', 'Olymp not found', array('status' => 404));
+        return new WP_Error('olymp_not_found', 'Олимпиада не найдена', array('status' => 404));
     }
 
     return $result;
+}
+
+function getOlympDetails($request)
+{
+    $olymp_slug = $request->get_param('olymp_slug');
+    return getOlymp($olymp_slug);
 }
