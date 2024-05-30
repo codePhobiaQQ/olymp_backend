@@ -4,6 +4,7 @@ require_once plugin_dir_path(__FILE__) . 'services/getOlympsList.php';
 require_once plugin_dir_path(__FILE__) . 'services/getOlympDetails.php';
 require_once plugin_dir_path(__FILE__) . 'services/getQualifyingStageTask.php';
 require_once plugin_dir_path(__FILE__) . 'services/getOlympOrganizations.php';
+require_once plugin_dir_path(__FILE__) . 'services/regFinalStage.php';
 
 function regOlympsEndpoints() {
     // Get Olymps list
@@ -51,6 +52,17 @@ function regOlympsEndpoints() {
             'methods' => 'GET',
             'callback' => 'getOlympOrganizations',
             'permission_callback' => '__return_true',
+        )
+    );
+
+    register_rest_route(
+        'custom/v2',
+        '/olymps/reg-final-stage/(?P<olymp_slug>[a-zA-Z0-9_\-]+)',
+
+        array(
+            'methods' => 'POST',
+            'callback' => 'regFinalStage',
+            'permission_callback' => 'is_user_logged_in',
         )
     );
 }
