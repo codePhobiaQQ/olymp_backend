@@ -3,7 +3,7 @@
 // TODO: think how to make this mapping automatic
 $quiz_categories = array(
     'cryptography' => 'Криптография',
-    'math' => 'Математика',
+    'mathematics' => 'Математика',
     'phys' => 'Физика',
     'chem' => 'Химия',
 );
@@ -23,7 +23,7 @@ function extract_quiz_id($content) {
     if (preg_match('/\[mlw_quizmaster\s+quiz=(\d+)\]/', $content, $matches)) {
         return (int)$matches[1];
     }
-    return null; // Если не найдено, возвращаем null
+    return null;
 }
 
 function getQualifyingStageTask($request)

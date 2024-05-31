@@ -5,9 +5,10 @@ require_once plugin_dir_path(__FILE__) . 'services/getOlympDetails.php';
 require_once plugin_dir_path(__FILE__) . 'services/getQualifyingStageTask.php';
 require_once plugin_dir_path(__FILE__) . 'services/getOlympOrganizations.php';
 require_once plugin_dir_path(__FILE__) . 'services/regFinalStage.php';
+require_once plugin_dir_path(__FILE__) . 'services/getQualifyingResults.php';
+require_once plugin_dir_path(__FILE__) . 'services/getAvailableFinalStages.php';
 
 function regOlympsEndpoints() {
-    // Get Olymps list
     register_rest_route(
         'custom/v2',
         '/olymps',
@@ -19,7 +20,17 @@ function regOlympsEndpoints() {
         )
     );
 
-    // Get qualifying stage task
+    register_rest_route(
+            'custom/v2',
+            '/olymps/qualifying/results',
+
+            array(
+                'methods' => 'GET',
+                'callback' => 'getQualifyingResultsCallback',
+                'permission_callback' => 'is_user_logged_in',
+            )
+        );
+
     register_rest_route(
         'custom/v2',
         '/olymps/qualifying/(?P<olymp_slug>[a-zA-Z0-9_\-]+)',
@@ -31,19 +42,6 @@ function regOlympsEndpoints() {
         )
     );
 
-    // Get olymp Details by link
-    register_rest_route(
-        'custom/v2',
-        '/olymps/(?P<olymp_slug>[a-zA-Z0-9_\-]+)',
-
-        array(
-            'methods' => 'GET',
-            'callback' => 'getOlympDetails',
-            'permission_callback' => '__return_true',
-        )
-    );
-
-    // Get olymp organizations
     register_rest_route(
         'custom/v2',
         '/olymp-organizations/(?P<olymp_slug>[a-zA-Z0-9_\-]+)',
@@ -63,6 +61,28 @@ function regOlympsEndpoints() {
             'methods' => 'POST',
             'callback' => 'regFinalStage',
             'permission_callback' => 'is_user_logged_in',
+        )
+    );
+
+    register_rest_route(
+        'custom/v2',
+        '/olymps/available-final-stages',
+
+        array(
+            'methods' => 'GET',
+            'callback' => 'getAvailableFinalStages',
+            'permission_callback' => 'is_user_logged_in',
+        )
+    );
+
+    register_rest_route(
+        'custom/v2',
+        '/olymps/(?P<olymp_slug>[a-zA-Z0-9_\-]+)',
+
+        array(
+            'methods' => 'GET',
+            'callback' => 'getOlympDetails',
+            'permission_callback' => '__return_true',
         )
     );
 }

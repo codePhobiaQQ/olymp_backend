@@ -210,6 +210,13 @@ require get_template_directory() . '/custom/post-types/organizing-committees.php
 add_action( 'init', 'register_organizing_committees_post_type' );
 // add_action( 'save_post', 'save_organizing_committee_meta' );
 
+require get_template_directory() . '/custom/post-types/final-stage-application.php';
+add_action( 'init', 'register_final_stage_application_post_type' );
+add_action('add_meta_boxes', 'add_final_stage_application_metaboxes');
+add_action('save_post', 'save_final_stage_application_meta');
+
+// add_action( 'save_post', 'save_organizing_committee_meta' );
+
 /** -----------------------------
  * ----- MENU CUSTOMIZATION -----
  * ------------------------------
@@ -218,12 +225,9 @@ require get_template_directory() . '/custom/menu-customization/qualifying-stage.
 add_action('admin_menu', 'add_qualifying_stage_menu_item');
 add_action('admin_init', 'qualifying_stage_settings_init');
 
-require get_template_directory() . '/custom/menu-customization/finishing-stage.php';
-add_action('admin_menu', 'add_finishing_stage_menu_item');
-add_action('admin_init', 'finishing_stage_settings_init');
-
-// require get_template_directory() . '/custom/menu-customization/qualifying-results.php';
-// add_action('admin_menu', 'add_qualifying_results_menu_item');
+require get_template_directory() . '/custom/menu-customization/final-stage.php';
+add_action('admin_menu', 'add_final_stage_menu_item');
+add_action('admin_init', 'final_stage_settings_init');
 
 /** -----------------------------
  * ----- CUSTOMIZATION TOKEN ----

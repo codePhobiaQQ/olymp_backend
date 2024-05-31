@@ -4,7 +4,7 @@
 // подробнее смотрите API Настроек: http://wp-kama.ru/id_3773/api-optsiy-nastroek.html
 
 // MAIN - PAGE
-function all_olymps_finishing_page_callback()
+function all_olymps_final_page_callback()
 {
     ?>
     <div class="wrap">
@@ -33,7 +33,7 @@ function all_olymps_finishing_page_callback()
                     <td><?php echo $label; ?></td>
                     <td><?php echo $start_date; ?></td>
                     <td><?php echo $end_date; ?></td>
-                    <td><a href="<?php echo admin_url('admin.php?page=finishing-stage-' . $type); ?>">Настройки</a></td>
+                    <td><a href="<?php echo admin_url('admin.php?page=final-stage-' . $type); ?>">Настройки</a></td>
                 </tr>
                 <?php
             }
@@ -49,7 +49,7 @@ function all_olymps_finishing_page_callback()
 // ---------------------
 
 // Получаем типы олимпиад из post-type "olymp_types"
-function get_olymp_finishing_types() {
+function get_olymp_final_types() {
     $olymp_types = array();
 
     $args = array(
@@ -72,10 +72,10 @@ function get_olymp_finishing_types() {
     return $olymp_types;
 }
 // Используем полученные типы олимпиад
-$olymp_types = get_olymp_finishing_types();
+$olymp_types = get_olymp_final_types();
 
 // Callback функция для поля выбора квиза
-function finishing_stage_quiz_field_render($args)
+function final_stage_quiz_field_render($args)
 {
     $type = $args['type'];
     $selected_quiz = get_option('finishing_stage_quiz_' . $type);
@@ -91,7 +91,7 @@ function finishing_stage_quiz_field_render($args)
     <?php
 }
 
-function finishing_stage_settings_init()
+function final_stage_settings_init()
 {
     global $olymp_types; // Используем глобальную переменную $olymp_types
 
@@ -102,14 +102,14 @@ function finishing_stage_settings_init()
         add_settings_section(
             'finishing_stage_section_' . $type,
             'Настройки олимпиады "' . $label . '"',
-            'finishing_stage_section_callback',
+            'final_stage_section_callback',
             'finishing_stage_options_' . $type
         );
 
         add_settings_field(
             'finishing_stage_start_date_field_' . $type,
             'Дата начала олимпиады "' . $label . '"',
-            'finishing_stage_start_date_field_render',
+            'final_stage_start_date_field_render',
             'finishing_stage_options_' . $type,
             'finishing_stage_section_' . $type,
             array('type' => $type) // Передаем тип олимпиады в качестве аргумента
@@ -118,7 +118,7 @@ function finishing_stage_settings_init()
         add_settings_field(
             'finishing_stage_end_date_field_' . $type,
             'Дата окончания олимпиады "' . $label . '"',
-            'finishing_stage_end_date_field_render',
+            'final_stage_end_date_field_render',
             'finishing_stage_options_' . $type,
             'finishing_stage_section_' . $type,
             array('type' => $type) // Передаем тип олимпиады в качестве аргумента
@@ -127,13 +127,13 @@ function finishing_stage_settings_init()
 }
 
 // Функция отображения секции настроек
-function finishing_stage_section_callback()
+function final_stage_section_callback()
 {
     echo '<p>Выберите даты начала и окончания заключительного этапа олимпиады:</p>';
 }
 
 // Функция отображения поля для выбора даты начала
-function finishing_stage_start_date_field_render($args)
+function final_stage_start_date_field_render($args)
 {
     $type = $args['type'];
     $start_date = get_option('finishing_stage_start_date_' . $type);
@@ -141,7 +141,7 @@ function finishing_stage_start_date_field_render($args)
 }
 
 // Функция отображения поля для выбора даты окончания
-function finishing_stage_end_date_field_render($args)
+function final_stage_end_date_field_render($args)
 {
     $type = $args['type'];
     $end_date = get_option('finishing_stage_end_date_' . $type);
@@ -149,11 +149,11 @@ function finishing_stage_end_date_field_render($args)
 }
 
 // Функция отображения страницы настроек
-function finishing_stage_options_page() {
+function final_stage_options_page() {
     global $olymp_types; // Используем глобальную переменную $olymp_types
 
     $page_slug = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : 'cryptography'; // Значение по умолчанию
-    $type = str_replace('finishing-stage-', '', $page_slug); // Обрезаем префикс для получения типа олимпиады
+    $type = str_replace('final-stage-', '', $page_slug); // Обрезаем префикс для получения типа олимпиады
 
     ?>
     <div class="wrap">
@@ -169,24 +169,24 @@ function finishing_stage_options_page() {
     <?php
 }
 
-function add_finishing_stage_menu_item()
+function add_final_stage_menu_item()
 {
     global $olymp_types; // Используем глобальную переменную $olymp_types
 
     $MENU_NAME = 'Заключительные этапы олимпиад';
 
     // Добавляем родительское меню
-    add_menu_page($MENU_NAME, $MENU_NAME, 'manage_options', 'finishing-stage', 'all_olymps_finishing_page_callback');
+    add_menu_page($MENU_NAME, $MENU_NAME, 'manage_options', 'final-stage', 'all_olymps_final_page_callback');
 
     // Добавляем подменю для каждого типа олимпиады
     foreach ($olymp_types as $type => $label) {
         add_submenu_page(
-            'finishing-stage', // Родительское меню
+            'final-stage', // Родительское меню
             'Заключительный этап олимпиады "' . $label . '"', // Заголовок страницы
             $label, // Название пункта меню
             'manage_options', // Уровень доступа
-            'finishing-stage-' . $type, // Slug страницы
-            'finishing_stage_options_page' // Callback функция для отображения содержимого страницы
+            'final-stage-' . $type, // Slug страницы
+            'final_stage_options_page' // Callback функция для отображения содержимого страницы
         );
     }
 }

@@ -15,7 +15,6 @@ function all_olymps_page_callback()
                 <th>Тип олимпиады</th>
                 <th>Дата начала</th>
                 <th>Дата окончания</th>
-                <th>Задние олимпиады</th>
                 <th>Настройки</th>
             </tr>
             </thead>
@@ -27,27 +26,12 @@ function all_olymps_page_callback()
             foreach ($olymp_types as $type => $label) {
                 $start_date = get_option('qualifying_stage_start_date_' . $type);
                 $end_date = get_option('qualifying_stage_end_date_' . $type);
-
-                $quiz_id = get_option('qualifying_stage_quiz_' . $type);
-                $quiz_data = get_post($quiz_id);
-
-                if ($quiz_data) {
-                    $quiz_link = admin_url('admin.php?page=mlw_quiz_options&quiz_id=' . preg_replace('/\D/', '', $quiz_data->post_content));
-                    $quiz_title = $quiz_data->post_title;
-                } else {
-                    $quiz_link = '';
-                    $quiz_title = '';
-                }
-
                 ?>
 
                 <tr>
                     <td><?php echo $label; ?></td>
                     <td><?php echo $start_date; ?></td>
                     <td><?php echo $end_date; ?></td>
-                    <td>
-                        <a href="<?php echo $quiz_link ?>"><?php echo $quiz_title; ?></a>
-                    </td>
                     <td><a href="<?php echo admin_url('admin.php?page=qualifying-stage-' . $type); ?>">Настройки</a></td>
                 </tr>
                 <?php
@@ -89,23 +73,6 @@ function get_olymp_types() {
 // Используем полученные типы олимпиад
 $olymp_types = get_olymp_types();
 
-// Callback функция для поля выбора квиза
-function qualifying_stage_quiz_field_render($args)
-{
-    $type = $args['type'];
-    $selected_quiz = get_option('qualifying_stage_quiz_' . $type);
-    $quizzes = get_posts(array('post_type' => 'qsm_quiz')); // Замените на ваш тип квиза
-
-    ?>
-    <select name="qualifying_stage_quiz_<?php echo $type; ?>" id="qualifying_stage_quiz_<?php echo $type; ?>">
-        <option value="">Выберите квиз</option>
-        <?php foreach ($quizzes as $quiz) : ?>
-            <option value="<?php echo $quiz->ID; ?>" <?php selected($selected_quiz, $quiz->ID); ?>><?php echo $quiz->post_title; ?></option>
-        <?php endforeach; ?>
-    </select>
-    <?php
-}
-
 function qualifying_stage_settings_init()
 {
     global $olymp_types; // Используем глобальную переменную $olymp_types
@@ -113,7 +80,6 @@ function qualifying_stage_settings_init()
     foreach ($olymp_types as $type => $label) {
         register_setting('qualifying_stage_options_' . $type, 'qualifying_stage_start_date_' . $type);
         register_setting('qualifying_stage_options_' . $type, 'qualifying_stage_end_date_' . $type);
-        register_setting('qualifying_stage_options_' . $type, 'qualifying_stage_quiz_' . $type); // Регистрация опции для квиза
 
         add_settings_section(
             'qualifying_stage_section_' . $type,
@@ -135,15 +101,6 @@ function qualifying_stage_settings_init()
             'qualifying_stage_end_date_field_' . $type,
             'Дата окончания олимпиады "' . $label . '"',
             'qualifying_stage_end_date_field_render',
-            'qualifying_stage_options_' . $type,
-            'qualifying_stage_section_' . $type,
-            array('type' => $type) // Передаем тип олимпиады в качестве аргумента
-        );
-
-        add_settings_field(
-            'qualifying_stage_quiz_field_' . $type,
-            'Выберите квиз для олимпиады "' . $label . '"',
-            'qualifying_stage_quiz_field_render',
             'qualifying_stage_options_' . $type,
             'qualifying_stage_section_' . $type,
             array('type' => $type) // Передаем тип олимпиады в качестве аргумента
