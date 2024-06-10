@@ -30,14 +30,18 @@ global $wpdb;
 
     foreach ($results as $result) {
         $olymp_data = getOlympDataByName($result->quiz_name);
+        $end_qualifying_date = get_option('qualifying_stage_end_date_' . $olymp_data['slug']);
 
         // Преобразуем время и дату прохождения теста
         $datetime_taken = date('Y-m-d H:i:s', strtotime($result->time_taken));
         $date_taken = date('Y-m-d', strtotime($result->time_taken));
         $time_taken = date('H:i:s', strtotime($result->time_taken));
 
+        // Получаем текущую дату
+        $current_date = date('Y-m-d');
+
         // Условия при которых мы можем отображать результаты олимпиады
-        if ($olymp_data["year"] != $academic_year) {
+        if ($olymp_data["year"] != $academic_year || $current_date >= $end_qualifying_date) {
             $response[] = array(
                 'result_id' => $result->result_id,
                 'quiz_id' => $result->quiz_id,
@@ -55,7 +59,7 @@ global $wpdb;
                 'result_id' => $result->result_id,
                 'quiz_id' => $result->quiz_id,
                 'quiz_name' => $result->quiz_name,
-                'message' => "можно будет посмотреть скоро",
+                'message' => "можно будет посмотреть " . $end_qualifying_date,
                 'date' => $date_taken,
                 'time' => $time_taken,
                 'datetime' => $datetime_taken
