@@ -1,12 +1,6 @@
 <?php
 
-// TODO: think how to make this mapping automatic
-$quiz_categories = array(
-    'cryptography' => 'Криптография',
-    'mathematics' => 'Математика',
-    'phys' => 'Физика',
-    'chem' => 'Химия',
-);
+require_once plugin_dir_path(__FILE__) . '../../core/functions/olymp/olymp.dto.php';
 
 function getQuiz($quiz_id) {
     return do_shortcode('[qsm quiz=' . $quiz_id . ']');
@@ -28,11 +22,10 @@ function extract_quiz_id($content) {
 
 function getQualifyingStageTask($request)
 {
-    global $quiz_categories;
     $olymp_slug = $request->get_param('olymp_slug');
-
-    // Получаем категорию по olymp_slug
-    $category_name = isset($quiz_categories[$olymp_slug]) ? $quiz_categories[$olymp_slug] : null;
+    error_log($olymp_slug);
+    $category_name = getOlympNameBySlug($olymp_slug);
+    error_log($category_name);
 
     if (!$category_name) {
         return new WP_REST_Response('Некорректный olymp_slug.', 400);

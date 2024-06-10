@@ -1,5 +1,9 @@
 <?php
 
+require_once plugin_dir_path(__FILE__) . '../../core/utils/get-current-academic-year.php';
+require_once plugin_dir_path(__FILE__) . '../../core/functions/olymp/olymp.dto.php';
+require_once plugin_dir_path(__FILE__) . '../../core/functions/olymp/getOlympDataByName.php';
+
 function getQualifyingResults() {
 global $wpdb;
     $user_id = get_current_user_id();
@@ -21,26 +25,42 @@ global $wpdb;
         return new WP_Error('no_results_found', 'Результаты не найдены', array('status' => 404));
     }
 
-    // Формируем массив с результатами
+    $academic_year = getCurrentAcademicYear();
     $response = array();
+
     foreach ($results as $result) {
+        $olymp_data = getOlympDataByName($result->quiz_name);
+
         // Преобразуем время и дату прохождения теста
         $datetime_taken = date('Y-m-d H:i:s', strtotime($result->time_taken));
         $date_taken = date('Y-m-d', strtotime($result->time_taken));
         $time_taken = date('H:i:s', strtotime($result->time_taken));
 
-        $response[] = array(
-            'result_id' => $result->result_id,
-            'quiz_id' => $result->quiz_id,
-            'quiz_name' => $result->quiz_name,
-            'point_score' => $result->point_score,
-            'correct_score' => $result->correct_score,
-            'correct' => $result->correct,
-            'total' => $result->total,
-            'date' => $date_taken,
-            'time' => $time_taken,
-            'datetime' => $datetime_taken // добавляем datetime под правильным ключом
-        );
+        // Условия при которых мы можем отображать результаты олимпиады
+        if ($olymp_data["year"] != $academic_year) {
+            $response[] = array(
+                'result_id' => $result->result_id,
+                'quiz_id' => $result->quiz_id,
+                'quiz_name' => $result->quiz_name,
+                'point_score' => $result->point_score,
+                'correct_score' => $result->correct_score,
+                'correct' => $result->correct,
+                'total' => $result->total,
+                'date' => $date_taken,
+                'time' => $time_taken,
+                'datetime' => $datetime_taken
+            );
+        } else {
+            $response[] = array(
+                'result_id' => $result->result_id,
+                'quiz_id' => $result->quiz_id,
+                'quiz_name' => $result->quiz_name,
+                'message' => "можно будет посмотреть скоро",
+                'date' => $date_taken,
+                'time' => $time_taken,
+                'datetime' => $datetime_taken
+            );
+        }
     }
 
     // Сортируем результаты по datetime в обратном порядке

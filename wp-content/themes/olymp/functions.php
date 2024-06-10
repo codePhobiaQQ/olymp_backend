@@ -236,3 +236,12 @@ add_action('admin_init', 'final_stage_settings_init');
 require get_template_directory() . '/custom/auth/customise-token.php';
 add_filter( 'jwt_auth_token_before_sign', 'customize_token', 10, 2);
 add_filter( 'jwt_auth_token_before_dispatch', 'customize_token_response', 10, 2 );
+
+/** -----------------------------
+ * ----- QUIZ CUSTOMIZATION -----
+ * ------------------------------
+ */
+require get_template_directory() . '/custom/quiz/quiz-complete.php';
+add_filter('qsm_submit_results_return_array', 'qsm_check_passing_score', 10, 2);
+
+
