@@ -18,6 +18,10 @@ $quiz_slug_name = array(
     'information_security' => 'Информационная безопасность',
 );
 
+function getAllOlympSlugs() {
+    return ['cryptography', 'mathematics', 'phys', 'chem', 'informatiс', 'information_security'];
+}
+
 function getOlympSlugByName($name) {
     global $quiz_name_slug;
     return isset($quiz_name_slug[$name]) ? $quiz_name_slug[$name] : null;

@@ -19,6 +19,7 @@ function getOlympsList() {
         // Получаем дату начала и окончания олимпиады
         $start_qualifying_date = get_option('qualifying_stage_start_date_' . $type);
         $end_qualifying_date = get_option('qualifying_stage_end_date_' . $type);
+
         $start_finishing_date = get_option('finishing_stage_start_date_' . $type);
         $end_finishing_date = get_option('finishing_stage_end_date_' . $type);
 
