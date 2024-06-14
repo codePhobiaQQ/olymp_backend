@@ -1,7 +1,6 @@
 <?php
 
 function customize_token( $token, $user ) {
-
     // Массив сопоставления ролей WordPress и заданных ролей
     $roles_mapping = array(
         "um_custom_role_1" => "teenager",
